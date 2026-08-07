@@ -10,9 +10,7 @@ import { ShortcutsPanel } from './ShortcutsPanel'
 import { FpsMeter } from './FpsMeter'
 
 /**
- * The desktop layout. Equivalent to PostHog's Wrapper (architecture doc
- * section 2), which is worth mirroring closely because its shape carries three
- * decisions:
+ * The desktop layout carries three decisions:
  *
  *   1. `desktopRef` wraps only the area BELOW the taskbar, and it is the drag
  *      boundary. Windows therefore cannot be dragged under the menu bar, and
@@ -21,9 +19,8 @@ import { FpsMeter } from './FpsMeter'
  *      closing window is flagged `closing`, renders the CSS pop-out keyframes,
  *      and is dropped from state 160ms later.
  *
- *      PostHog wraps this list in `AnimatePresence` because their exits are
- *      framer variants. Ours are CSS keyframe classes, and running both at once
- *      is an actual bug: AnimatePresence kept a removed window mounted forever,
+ *      CSS keyframes own the exit animation. Running them alongside
+ *      `AnimatePresence` is a bug because a removed window can stay mounted,
  *      so state.length went to 0 while the DOM still showed a window. One
  *      mechanism has to own the exit. Here it is the provider.
  *

@@ -6,15 +6,13 @@ import { useShell } from './ShellProvider'
 
 /**
  * The global menu bar. Navigation and system controls only.
- * Equivalent to PostHog's TaskBarMenu (architecture doc section 2).
  *
  * The open-window list deliberately lives in `Dock.tsx` instead, so menu items
  * never shift position as windows open and close.
  *
  * Built on the Radix Menubar primitive, wrapped locally so the OS styling lives
- * in exactly one place. PostHog's own convention is never to import a Radix
- * primitive raw into a page, and it is a good one: it means restyling all menus
- * is a one-file change.
+ * in exactly one place. That keeps every menu consistent and makes restyling a
+ * one-file change.
  */
 
 interface MenuDef {

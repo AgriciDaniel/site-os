@@ -16,8 +16,7 @@ import { resolveGeometry, settingsFor } from '@/lib/appSettings'
 import type { AppWindow, Size, Snapped, WindowMode } from '@/lib/types'
 
 /**
- * The window manager. Equivalent to PostHog's App provider
- * (architecture doc section 3), ported to the Next.js App Router.
+ * The window manager, built for the Next.js App Router.
  *
  * THE PORT PROBLEM
  *
@@ -46,9 +45,8 @@ type Panel = 'none' | 'shortcuts' | 'display'
 /**
  * How a navigation should resolve against the open windows.
  *
- * PostHog documents two behaviours: replace the focused window, or force a new
- * one via `newWindow: true`. Building it that way surfaced a third case they
- * must also handle somewhere, because two intents are not enough.
+ * A window manager needs three navigation behaviours. Two intents are not
+ * enough because desktop icons should not replace unrelated focused content.
  *
  *   'replace'  in-content links. Reuse the focused window, like a browser tab.
  *   'launch'   desktop icons and menu items. Focus the window already showing

@@ -17,9 +17,6 @@ terminal. Free-window mode adds live dragging, resizing, snapping,
 minimize/maximize/restore controls, and a dock. The shell is additive: every
 route remains a real server-rendered document underneath it.
 
-This is an independent template. It does not include PostHog source code,
-branding, or binary assets, and it is not affiliated with PostHog.
-
 ## Requirements
 
 - Node.js 22 or newer (tested in CI on Node.js 22 and 24)
@@ -82,7 +79,7 @@ crawlers to read.
 - Light/dark themes, modern/classic window skins, three CSS wallpapers, reduced transparency, and an FPS meter
 - A Playwright behavior suite in `verify.py`
 - A reusable responsive, color, and marketing playbook in
-  `docs/posthog-adaptation-playbook.md`
+  `docs/site-os-design-playbook.md`
 
 ## Project map
 
@@ -94,7 +91,7 @@ crawlers to read.
 | `lib/apps.tsx` | Route-to-window-content registry |
 | `lib/appSettings.ts` | Per-route titles, sizes, constraints, and default positions |
 | `lib/types.ts` | Shared shell and window types |
-| `docs/posthog-adaptation-playbook.md` | Responsive, color, marketing, and community customization notes |
+| `docs/site-os-design-playbook.md` | Responsive, color, marketing, and community customization notes |
 | `tailwind.config.ts` | Design tokens, motion, and container-query configuration |
 | `verify.py` | Optional end-to-end behavior checks |
 | `.github/` | CI, dependency updates, issue forms, and PR guidance |
@@ -165,7 +162,7 @@ The homepage demonstrates the template's recommended structure: outcome-led
 headline, immediate evidence, interactive product proof, focused color roles,
 and a clear closing invitation. The complete reasoning and observed reference
 measurements are documented in
-[`docs/posthog-adaptation-playbook.md`](docs/posthog-adaptation-playbook.md).
+[`docs/site-os-design-playbook.md`](docs/site-os-design-playbook.md).
 
 Use the strategy, not another company's identity. Replace all example copy,
 colors, and content with the community project's own brand.

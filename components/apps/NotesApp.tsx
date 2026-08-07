@@ -46,7 +46,7 @@ export function NotesApp() {
             <h2>Implementation references</h2>
             <p>
                 The full reusable study lives in{' '}
-                <code>docs/posthog-adaptation-playbook.md</code>. Shell mode is owned by{' '}
+                <code>docs/site-os-design-playbook.md</code>. Shell mode is owned by{' '}
                 <code>components/shell/ShellProvider.tsx</code>, responsive geometry by{' '}
                 <code>app/globals.css</code>, and container-aware page composition by the
                 app components.

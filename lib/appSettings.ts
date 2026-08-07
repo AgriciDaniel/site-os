@@ -1,8 +1,7 @@
 import type { AppSetting, Position, Size } from './types'
 
 /**
- * Per-route window geometry. The equivalent of PostHog's `appSettings` map
- * (architecture doc section 3).
+ * Per-route window geometry.
  *
  * Keeping this in one table rather than on each page means window behavior is
  * reviewable in a single place, and a new page inherits sane defaults by simply

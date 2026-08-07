@@ -18,7 +18,6 @@ import { DesktopArt, type IconName } from './icons'
 
 /**
  * The desktop: wallpaper, icons, and the right-click menu.
- * Equivalent to PostHog's Desktop component (architecture doc section 2).
  *
  * DRAG BEHAVIOUR, AND THE THREE THINGS THAT MADE IT FEEL BROKEN
  *

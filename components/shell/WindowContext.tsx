@@ -4,8 +4,7 @@ import { createContext, useContext, useMemo, type ReactNode } from 'react'
 import type { AppWindow } from '@/lib/types'
 
 /**
- * Exposes the window a component is rendering inside. The equivalent of
- * PostHog's `useWindow()` (architecture doc section 2).
+ * Exposes the window a component is rendering inside.
  *
  * Why this exists: page content sometimes needs to know its own window, for
  * example to size a chart to the window rather than the viewport, or to open a

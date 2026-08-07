@@ -5,17 +5,15 @@ export function AboutApp() {
         <Prose>
             <h1>About this scaffold</h1>
             <p>
-                An original implementation of the desktop-OS website pattern, built from a
-                mechanism study of posthog.com. It reuses the <em>ideas</em>: an additive
-                shell over static routes, intent-based window resolution, exact geometry
-                restore, container-query layout, and a mode-times-scheme token system.
+                An original implementation of the desktop-OS website pattern. It uses an
+                additive shell over static routes, intent-based window resolution, exact
+                geometry restore, container-query layout, and a mode-times-scheme token
+                system.
             </p>
-            <h2>What was deliberately not copied</h2>
+            <h2>Make it your own</h2>
             <p>
-                None of PostHog&rsquo;s code, artwork, mascot, wallpapers, typeface, palette,
-                or copy. Their licence prohibits reusing the site, and the mascot and
-                wordmark are trademarks regardless. Every colour, gradient, and word here is
-                original placeholder material meant to be replaced with your own.
+                Every colour, gradient, illustration, and word here is original placeholder
+                material meant to be replaced with your own brand and product content.
             </p>
             <h2>Token system</h2>
             <p>
