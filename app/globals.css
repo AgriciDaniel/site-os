@@ -1,0 +1,268 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Token definitions: mode x scheme.
+ *
+ * Pattern adapted from ../study/os-shell-architecture.md section 6.
+ *
+ * Values are space-separated RGB triples, not hex, so Tailwind's
+ * `rgb(var(--bg) / <alpha-value>)` can apply an alpha channel. That is what
+ * allows `bg-primary/50` on frosted chrome.
+ *
+ * Direction of the ramp reverses between modes, and this is deliberate:
+ *   light mode -> surfaces get DARKER as they recede from content
+ *   dark mode  -> surfaces get LIGHTER as they recede from content
+ * Either way, content sits forward and chrome sits back. Each surface's border
+ * moves in step with it so contrast against its own background stays even.
+ *
+ * Scheme roles:
+ *   primary   main content surface
+ *   secondary supporting furniture (sidebars, panels)
+ *   tertiary  app chrome (window frame, header bars)
+ */
+
+@layer base {
+    :root {
+        --accent: 49 91 214; /* signal blue */
+        --accent-fg: 255 255 255;
+    }
+
+    /* ---------- Light mode ---------- */
+    /* The mode class itself carries the `primary` values as a ROOT FALLBACK, so
+     * <body> and anything outside a [data-scheme] subtree still resolve --bg.
+     *
+     * This was originally written as `.light:not(:has([data-scheme]))`, which
+     * never matched: <html> always contains data-scheme elements, so the guard
+     * disabled itself. <body> then had no --bg at all, `bg-primary` resolved to
+     * nothing, and the frosted chrome blurred the default white canvas instead
+     * of the page, which made the taskbar and dock read light grey in dark mode.
+     *
+     * The [data-scheme] rules below are more specific, so subtrees still win. */
+    .light,
+    .light [data-scheme='primary'] {
+        --bg: 251 251 253; /* ink-1  */
+        --border: 216 219 228; /* ink-4  */
+        --text: 26 28 33; /* ink-12 */
+        --text-muted: 86 91 105; /* ink-9  */
+    }
+
+    .light [data-scheme='secondary'] {
+        --bg: 242 243 247; /* ink-2 */
+        --border: 195 199 212; /* ink-5 */
+        --text: 26 28 33;
+        --text-muted: 86 91 105;
+    }
+
+    .light [data-scheme='tertiary'] {
+        --bg: 232 234 240; /* ink-3 */
+        --border: 168 173 190; /* ink-6 */
+        --text: 26 28 33;
+        --text-muted: 65 69 81;
+    }
+
+    /* ---------- Dark mode ---------- */
+    .dark,
+    .dark [data-scheme='primary'] {
+        --bg: 24 25 29;
+        --border: 58 62 73;
+        --text: 244 245 248;
+        --text-muted: 154 160 176;
+    }
+
+    .dark [data-scheme='secondary'] {
+        --bg: 31 33 38;
+        --border: 68 73 86;
+        --text: 244 245 248;
+        --text-muted: 154 160 176;
+    }
+
+    .dark [data-scheme='tertiary'] {
+        --bg: 39 41 48;
+        --border: 88 94 110;
+        --text: 244 245 248;
+        --text-muted: 168 173 190;
+    }
+
+    /* The `classic` skin trades soft frosted chrome for hard outlines, the way
+     * pre-OS-X interfaces looked. Components opt in via the `skin-classic:`
+     * variant defined in the plugins section below. */
+    [data-skin='classic'] {
+        --radius-window: 4px;
+    }
+
+    html,
+    body {
+        @apply h-full;
+    }
+
+    body {
+        @apply bg-primary text-content antialiased;
+        font-family:
+            ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+            Arial, sans-serif;
+    }
+
+    /* The document itself never scrolls. Content scrolls inside a window's own
+     * scroll viewport instead. See architecture doc section 8. */
+    body {
+        overflow: hidden;
+    }
+}
+
+@layer components {
+    /* Frosted chrome: the semantic surface at partial alpha over a backdrop blur.
+     * This is the signature of the whole look.
+     *
+     * BLUR RADIUS IS A PERFORMANCE DECISION, NOT ONLY A VISUAL ONE.
+     *
+     * The reference measures 64px. Three surfaces at that radius run at once
+     * here (taskbar 1600x40, window 1100x752, dock 1600x44), and a
+     * backdrop-filter must re-sample and re-blur its whole backdrop whenever
+     * anything beneath it moves, which is exactly what dragging an icon does.
+     * Blur cost scales with radius, so 28px is far cheaper and still reads as
+     * frosted at these alphas. */
+    .chrome-taskbar {
+        @apply bg-primary/60;
+        backdrop-filter: blur(28px);
+    }
+
+    .chrome-window {
+        @apply bg-primary/75;
+        backdrop-filter: blur(28px);
+    }
+
+    /* Reduce transparency: drops every backdrop-filter and makes chrome opaque.
+     *
+     * This is both an accessibility affordance (the same setting macOS and
+     * Windows both ship) and a guaranteed performance escape hatch. Backdrop
+     * blur is the single most expensive thing this interface does, and on some
+     * GPU and driver combinations it is the difference between 60fps and visible
+     * stutter while dragging. Anyone who hits that can switch it off instead of
+     * living with it. */
+    /* Applies to every blurred surface, not only windows and bars: menus and
+     * panels use `backdrop-blur-chrome` too, and an escape hatch that leaves some
+     * blur behind is not an escape hatch. */
+    :root[data-transparency='opaque'] .chrome-taskbar,
+    :root[data-transparency='opaque'] .chrome-window,
+    :root[data-transparency='opaque'] [class*='backdrop-blur'] {
+        backdrop-filter: none;
+        background-color: rgb(var(--bg));
+    }
+
+    /* Radix ScrollArea viewport: the real scroll node inside a window. */
+    .app-scroll-viewport {
+        @apply size-full;
+    }
+
+    /*
+     * Responsive shell contract:
+     *   locked (default)  one route window, CSS-owned geometry, no dragging
+     *   free              the complete desktop window manager
+     *
+     * The locked window is deliberately container-sized. Its content keeps
+     * using container queries, so the same route composition works when this
+     * surface narrows from desktop to tablet to phone.
+     */
+    .shell-root {
+        padding: 0;
+    }
+
+    .shell-root[data-window-mode='locked'] {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .shell-root[data-window-mode='locked'] .shell-taskbar {
+        border-radius: 10px;
+    }
+
+    .locked-window {
+        /*
+         * Do not center with translate(-50%, -50%). AppWindow is a Framer
+         * Motion element and Motion owns the inline transform while a free
+         * window is dragged. That inline transform can override this rule,
+         * leaving left/top at 50% and stranding the locked window in the
+         * bottom-right corner. Auto margins center without sharing transform
+         * ownership, so this remains stable in both modes.
+         */
+        inset: 0;
+        width: min(80%, 1200px);
+        height: 95%;
+        margin: auto;
+    }
+
+    .locked-window-maximized {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    .marketing-grid {
+        background-image:
+            linear-gradient(rgb(var(--border) / 0.28) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(var(--border) / 0.28) 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+}
+
+@layer utilities {
+    /* The wallpaper is a five-layer gradient across the full viewport, which is
+     * expensive to paint. Promoting it to its own layer and containing its paint
+     * means moving an icon above it composites rather than repaints it. */
+    .desktop-layer {
+        transform: translateZ(0);
+        contain: paint;
+    }
+
+    /* Promote to a compositor layer only while something is actually moving,
+     * then release it. Framer Motion owns `transform` while dragging, so an
+     * explicit translateZ here would override the live cursor-follow transform
+     * and make the window jump only after pointer-up.
+     * See architecture doc section 4. */
+    .compositing {
+        will-change: transform;
+    }
+}
+
+/* Respect a user's reduced-motion preference: keep the state changes, drop the
+ * movement. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (max-width: 1023px) {
+    .shell-root[data-window-mode='locked'] .shell-taskbar {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .shell-root[data-window-mode='locked'] {
+        padding: 8px;
+    }
+
+    .locked-window,
+    .locked-window-maximized {
+        left: 0;
+        right: auto;
+        top: 0;
+        bottom: auto;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .locked-window .locked-mobile-hide {
+        display: none;
+    }
+}
