@@ -176,9 +176,9 @@ colors, and content with the community project's own brand.
 
 ## Contributing and security
 
-Contributions are welcome; start with [CONTRIBUTING.md](CONTRIBUTING.md). For
-security concerns, follow [SECURITY.md](SECURITY.md) instead of opening a public
-issue.
+Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), follow
+the [Code of Conduct](CODE_OF_CONDUCT.md), and use [SECURITY.md](SECURITY.md)
+instead of opening a public issue for security concerns.
 
 ## License
 
