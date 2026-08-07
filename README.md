@@ -9,6 +9,8 @@ playful operating-system shell. Its default is intentionally simple: one stable
 route window on desktop, tablet, and phone. A full draggable multi-window
 desktop remains available as an optional playground.
 
+![Site OS dashboard: a centered locked window with a marketing homepage, desktop icons, and top menu](docs/assets/site-os-dashboard.png)
+
 The shell includes responsive app windows, a mobile three-column launcher,
 desktop icons, menus, themes, wallpapers, keyboard shortcuts, and a working
 terminal. Free-window mode adds live dragging, resizing, snapping,
